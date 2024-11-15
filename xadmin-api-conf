@@ -7,7 +7,8 @@ proxy_set_header Upgrade $http_upgrade;
 proxy_set_header Connection $http_connection;
 proxy_set_header X-Forwarded-For $remote_addr;
 #proxy_set_header X-Forwarded-Host $host:$server_port;  # 非默认的80，443端口，则需要打开该配置
-proxy_set_header X-Forwarded-Proto $scheme;
+#proxy_set_header X-Forwarded-Proto $scheme;
+proxy_set_header X-Forwarded-Proto $http_x_forwarded_proto;
 proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;  # 如果上层还有其他 slb 需要使用 $proxy_add_x_forwarded_for 获取真实 ip
 
 proxy_ignore_client_abort on;
