@@ -33,6 +33,13 @@ function config_nginx() {
   else
     sed -i 's@proxy_set_header X-Forwarded-For .*;@proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;@g' "${config_file}"
   fi
+
+  if [ "${HTTP_PORT}" != "80" ] && [ "${HTTP_PORT}" != "443" ]; then
+      sed -i 's@proxy_set_header X-Forwarded-Host .*;@proxy_set_header X-Forwarded-Host $host:$server_port;@g' "${config_file}"
+  else
+      sed -i 's@proxy_set_header X-Forwarded-Host .*;@proxy_set_header X-Forwarded-Host $host;@g' "${config_file}"
+  fi
+
 }
 
 
