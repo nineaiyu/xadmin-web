@@ -39,7 +39,6 @@ jobs:
             type=semver,pattern={{version}}
 
       - name: Extract repository name
-        id: repo
         run: echo "VERSION=${{ steps.meta.outputs.tags }}" >> $GITHUB_ENV
 
       - name: Build and push multi-arch image
