@@ -1,3 +1,4 @@
+ARG VERSION=dev
 FROM nineaiyu/xadmin-client:${VERSION} AS client
 
 FROM nginx:1.24-bullseye
