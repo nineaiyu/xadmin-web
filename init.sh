@@ -84,12 +84,19 @@ function config_https() {
   fi
 }
 
+function config_gzip() {
+  if [[ "${GZIP}" == "off" ]]; then
+    sed -i "s@gzip .*;@gzip ${GZIP};@g" /etc/nginx/nginx.conf
+  fi
+}
+
 function main() {
   if [ -f "/etc/nginx/sites-enabled/https_server.conf" ]; then
     config_https
   else
     config_http
   fi
+  config_gzip
 }
 
 main
