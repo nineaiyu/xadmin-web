@@ -1,9 +1,9 @@
 ARG VERSION=dev
 FROM nineaiyu/xadmin-client:${VERSION} AS client
 
-FROM nginx:1.24-bullseye
+FROM nginx:1.31.5-alpine
 
-ARG APT_MIRROR=http://deb.debian.org
+ARG ALPINE_MIRROR=dl-cdn.alpinelinux.org
 
 ARG TOOLS="                           \
         ca-certificates               \
@@ -11,11 +11,8 @@ ARG TOOLS="                           \
         "
 
 RUN set -ex \
-    && rm -f /etc/apt/apt.conf.d/docker-clean \
-    && sed -i "s@http://.*.debian.org@${APT_MIRROR}@g" /etc/apt/sources.list \
-    && apt-get update > /dev/null \
-    && apt-get -y install --no-install-recommends ${TOOLS} \
-    && apt-get clean && rm -rf /var/lib/apt/lists /var/cache/apt/archives
+    && sed -i "s@dl-cdn.alpinelinux.org@${ALPINE_MIRROR}@g" /etc/apk/repositories \
+    && apk add --no-cache ${TOOLS}
 
 WORKDIR /opt
 

@@ -1,7 +1,7 @@
-#!/bin/bash
+#!/bin/sh
 #
 
-function config_nginx() {
+config_nginx() {
   config_file=$1
   if [ ! -f "${config_file}" ]; then
     echo "config file ${config_file} not found"
@@ -43,7 +43,7 @@ function config_nginx() {
 }
 
 
-function config_http() {
+config_http() {
   config_file=/etc/nginx/conf.d/http_server.conf
   if [ -f "${config_file}" ]; then
     rm -f "${config_file}"
@@ -53,7 +53,7 @@ function config_http() {
   config_nginx "${config_file}"
 }
 
-function config_https() {
+config_https() {
   config_file=/etc/nginx/conf.d/https_server.conf
   if [ -f "${config_file}" ]; then
     rm -f "${config_file}"
@@ -84,13 +84,13 @@ function config_https() {
   fi
 }
 
-function config_gzip() {
-  if [[ "${GZIP}" == "off" ]]; then
+config_gzip() {
+  if [ "${GZIP}" = "off" ]; then
     sed -i "s@gzip .*;@gzip ${GZIP};@g" /etc/nginx/nginx.conf
   fi
 }
 
-function main() {
+main() {
   if [ -f "/etc/nginx/sites-enabled/https_server.conf" ]; then
     config_https
   else
