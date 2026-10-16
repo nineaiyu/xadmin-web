@@ -44,7 +44,8 @@
 ## 三、验证（改配置后必做）
 
 ```bash
-# ① 镜像构建（tag 与 xadmin-client 同版本）
+# ① 镜像构建（tag 与 xadmin-client 同版本；工作流内置「等待 nineaiyu/xadmin-client:${VERSION}
+#    出现」的有界轮询，因此 client 镜像未构建完时不会以 not found 失败）
 VERSION=dev docker buildx build -t nineaiyu/xadmin-web:dev . --load
 
 # ② 起容器实测（需同网络里有名为 server 的后端容器，否则 /api 转发会 502——可先只验静态面）

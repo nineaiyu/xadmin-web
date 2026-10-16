@@ -38,6 +38,24 @@ jobs:
           tags: |
             type=semver,pattern={{version}}
 
+      - name: Wait for client image
+        # 本镜像 `FROM nineaiyu/xadmin-client:${VERSION}`：同批 tag 推送时 client 仓的镜像
+        # 构建可能尚未完成，buildx 会直接以 "not found" 失败（5.0.0 发布时即如此）。
+        # 这里先有界等待客户端镜像出现，使两仓 tag 的推送顺序不再敏感。
+        run: |
+          set -euo pipefail
+          IMAGE="nineaiyu/xadmin-client:${{ steps.meta.outputs.version }}"
+          deadline=$(( $(date +%s) + 2400 ))
+          until docker buildx imagetools inspect "${IMAGE}" > /dev/null 2>&1; do
+            if [[ "$(date +%s)" -ge "${deadline}" ]]; then
+              echo "::error::等待客户端镜像超时：${IMAGE}（检查 xadmin-client 的 Build and Push Image）"
+              exit 1
+            fi
+            echo "等待客户端镜像：${IMAGE}"
+            sleep 30
+          done
+          echo "客户端镜像就绪：${IMAGE}"
+
       - name: Build and push multi-arch image
         uses: docker/build-push-action@v6
         with:
